@@ -7,7 +7,11 @@
 body {
   font-family: sans-serif;
   font-size: 16px;
+  color: #fff;
   background-color: #18171c;
+  width: 100%;
+  max-width: 1080px;
+  margin-inline: auto;
 }
 
 a {
