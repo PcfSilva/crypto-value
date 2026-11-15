@@ -1,13 +1,30 @@
+import React, { useState, type ChangeEvent } from "react"
 import { BsSearch } from "react-icons/bs"
 import styles from "./home.module.css"
 
 export function Home() {
+  const [input, setInput] = useState("")
+
+  function handleSubmit(e: ChangeEvent) {
+    e.preventDefault()
+
+    if (input === "") return
+
+    alert(input)
+  }
+
+  function handleGetMore() {
+    alert("BUSCAR MAIS")
+  }
+
   return (
     <main className={styles.container}>
-      <form>
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Digite sua moeda aqui!"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
         />
         <button>
           <BsSearch size={30} color="#fff" />
@@ -45,6 +62,9 @@ export function Home() {
           </tr>
         </tbody>
       </table>
+      <button className={styles.getMore} onClick={handleGetMore}>
+        Carregar mais
+      </button>
     </main>
   )
 }

@@ -60,6 +60,15 @@ td:last-child {
   text-align: center;
 }
 
+.getMore {
+  background-color: #ff8800;
+  color: #fff;
+  font-weight: bold;
+  padding: 8px 12px;
+  margin-top: 14px;
+  border-radius: 6px;
+}
+
 @media screen and (max-width: 600px) {
   table {
     margin-top: 14px;
