@@ -1,11 +1,57 @@
-import { useState, type ChangeEvent } from "react"
+import { useState, type ChangeEvent, useEffect } from "react"
 import { useNavigate } from "react-router"
 import { BsSearch } from "react-icons/bs"
 import styles from "./home.module.css"
 
 export function Home() {
   const [input, setInput] = useState("")
+  const [coins, setCoins] = useState<CoinProps[]>([])
+
   const navigate = useNavigate()
+
+
+  useEffect(() => {
+    getData()
+  }, [])
+
+  interface CoinProps {
+    changePercent24Hr: String,
+    id: String,
+    marketCapUsd: String,
+    maxSupply: String,
+    name: String,
+    priceUsd: String,
+    supply: String,
+    symbol: String,
+    volumeUsd24Hr: String,
+    vwap24Hr: String
+  }
+
+  interface DataProps {
+    data: CoinProps[]
+  }
+
+  async function getData() {
+    fetch("https://rest.coincap.io/v3/assets?limit=10&offset=0&apiKey=cc8568949291c0f8ea5d9b1e29d1c1db5e5a83492468ab6bb560c1cb82182941")
+      .then((response) => response.json())
+      .then((data: DataProps) => {
+        const dataResult = data.data
+        const price = Intl.NumberFormat("en-US", {
+          currency: "USD"
+        })
+
+        const resultFormated = dataResult.map((item) => {
+          const formated = {
+            ...item,
+            priceUsdFormated: price.format(Number(item.priceUsd))
+          }
+
+          return formated
+        })
+
+        console.log(resultFormated)
+      })
+  }
 
   function handleSubmit(e: ChangeEvent) {
     e.preventDefault()
