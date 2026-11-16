@@ -1,16 +1,17 @@
-import React, { useState, type ChangeEvent } from "react"
+import { useState, type ChangeEvent } from "react"
+import { useNavigate } from "react-router"
 import { BsSearch } from "react-icons/bs"
 import styles from "./home.module.css"
 
 export function Home() {
   const [input, setInput] = useState("")
+  const navigate = useNavigate()
 
   function handleSubmit(e: ChangeEvent) {
     e.preventDefault()
 
     if (input === "") return
-
-    alert(input)
+    navigate(`detail/${input}`)
   }
 
   function handleGetMore() {
