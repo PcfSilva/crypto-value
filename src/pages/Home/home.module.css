@@ -22,7 +22,7 @@ form button {
 
 table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
   font-size: 14px;
   table-layout: fixed;
 }
@@ -100,5 +100,9 @@ td:last-child {
   td::before {
     content: attr(data-label);
     margin-right: auto;
+  }
+
+  td:last-child {
+    border-bottom: 1px solid #ddd;
   }
 }

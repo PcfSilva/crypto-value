@@ -1,5 +1,5 @@
 import { useState, type ChangeEvent, useEffect } from "react"
-import { useNavigate } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { BsSearch } from "react-icons/bs"
 import styles from "./home.module.css"
 
@@ -15,16 +15,19 @@ export function Home() {
   }, [])
 
   interface CoinProps {
-    changePercent24Hr: String,
-    id: String,
-    marketCapUsd: String,
-    maxSupply: String,
-    name: String,
-    priceUsd: String,
-    supply: String,
-    symbol: String,
-    volumeUsd24Hr: String,
-    vwap24Hr: String
+    changePercent24Hr: string,
+    id: string,
+    marketCapUsd: string,
+    maxSupply: string,
+    name: string,
+    priceUsd: string,
+    supply: string,
+    symbol: string,
+    volumeUsd24Hr: string,
+    vwap24Hr: string,
+    formatedPriceUsd?: string,
+    formatedMarketUsd?: string,
+    formatedVolumeUsd?: string
   }
 
   interface DataProps {
@@ -36,20 +39,29 @@ export function Home() {
       .then((response) => response.json())
       .then((data: DataProps) => {
         const dataResult = data.data
+        const priceCompact = Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
+          notation: "compact"
+        })
+
         const price = Intl.NumberFormat("en-US", {
+          style: "currency",
           currency: "USD"
         })
 
         const resultFormated = dataResult.map((item) => {
           const formated = {
             ...item,
-            priceUsdFormated: price.format(Number(item.priceUsd))
+            formatedPriceUsd: price.format(Number(item.priceUsd)),
+            formatedMarketUsd: priceCompact.format(Number(item.marketCapUsd)),
+            formatedVolumeUsd: priceCompact.format(Number(item.volumeUsd24Hr))
           }
 
           return formated
         })
 
-        console.log(resultFormated)
+        setCoins(resultFormated)
       })
   }
 
@@ -88,25 +100,27 @@ export function Home() {
           </tr>
         </thead>
         <tbody>
-          <tr className={styles.tr}>
-            <td className={styles.tdLabel} data-label="Moeda">
-              <div>
-                <span>Bitcoin</span> | BTC
-              </div>
-            </td>
-            <td className={styles.tdLabel} data-label="Valor de mercado">
-              3T
-            </td>
-            <td className={styles.tdLabel} data-label="Preço">
-              8.000M
-            </td>
-            <td className={styles.tdLabel} data-label="Volume">
-              6B
-            </td>
-            <td className={styles.tdProfit} data-label="Mudança 24h">
-              1.5
-            </td>
-          </tr>
+          {coins.length > 0 && coins.map((item) =>
+            <tr className={styles.tr} key={item.id}>
+              <td className={styles.tdLabel} data-label="Moeda">
+                <div>
+                  <Link to={`detail/${item.id}`}><span>{item.name}</span> | {item.symbol}</Link>
+                </div>
+              </td>
+              <td className={styles.tdLabel} data-label="Valor de mercado">
+                {item.formatedMarketUsd}
+              </td>
+              <td className={styles.tdLabel} data-label="Preço">
+                {item.formatedPriceUsd}
+              </td>
+              <td className={styles.tdLabel} data-label="Volume">
+                {item.formatedVolumeUsd}
+              </td>
+              <td className={(Number(item.changePercent24Hr) > 0 ? styles.tdProfit : styles.tdLoss)} data-label="Mudança 24h">
+                {Number(item.changePercent24Hr).toFixed(2)}
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
       <button className={styles.getMore} onClick={handleGetMore}>
