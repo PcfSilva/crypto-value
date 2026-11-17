@@ -50,6 +50,16 @@ td:last-child {
   text-align: center;
 }
 
+.tdLogo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logoCripto {
+  width: 20px;
+}
+
 .tdProfit {
   color: #12f98a;
   text-align: center;

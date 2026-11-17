@@ -6,13 +6,14 @@ import styles from "./home.module.css"
 export function Home() {
   const [input, setInput] = useState("")
   const [coins, setCoins] = useState<CoinProps[]>([])
+  const [offset, setOffSet] = useState("0")
 
   const navigate = useNavigate()
 
 
   useEffect(() => {
     getData()
-  }, [])
+  }, [offset])
 
   interface CoinProps {
     changePercent24Hr: string,
@@ -35,7 +36,7 @@ export function Home() {
   }
 
   async function getData() {
-    fetch("https://rest.coincap.io/v3/assets?limit=10&offset=0&apiKey=cc8568949291c0f8ea5d9b1e29d1c1db5e5a83492468ab6bb560c1cb82182941")
+    fetch(`https://rest.coincap.io/v3/assets?limit=10&offset=${offset}&apiKey=cc8568949291c0f8ea5d9b1e29d1c1db5e5a83492468ab6bb560c1cb82182941`)
       .then((response) => response.json())
       .then((data: DataProps) => {
         const dataResult = data.data
@@ -60,8 +61,8 @@ export function Home() {
 
           return formated
         })
-
-        setCoins(resultFormated)
+        const listCoins = [...coins, ...resultFormated]
+        setCoins(listCoins)
       })
   }
 
@@ -73,7 +74,7 @@ export function Home() {
   }
 
   function handleGetMore() {
-    alert("BUSCAR MAIS")
+    setOffSet(offset + 10)
   }
 
   return (
@@ -102,7 +103,8 @@ export function Home() {
         <tbody>
           {coins.length > 0 && coins.map((item) =>
             <tr className={styles.tr} key={item.id}>
-              <td className={styles.tdLabel} data-label="Moeda">
+              <td className={(styles.tdLabel, styles.tdLogo)} data-label="Moeda">
+                <img className={styles.logoCripto} src={`https://assets.coincap.io/assets/icons/${item.symbol.toLowerCase()}@2x.png`} />
                 <div>
                   <Link to={`detail/${item.id}`}><span>{item.name}</span> | {item.symbol}</Link>
                 </div>
